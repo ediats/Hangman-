@@ -3,144 +3,108 @@
   <head>
     <title>Hangman!</title>
     <style>
-      #alphabet { margin: auto;
-                  padding: 20px; }
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 20px;
+        background-color: #f2f2f2;
+      }
+      #alphabet {
+        margin: auto;
+        padding: 20px;
+      }
       #word {
-  margin: auto;
-  font-size: 2em;
-  font-weight: bold;
-  font-family: serif;
-  padding: 20px;
-}
-
+        margin: auto;
+        font-size: 2em;
+        font-weight: bold;
+        padding: 20px;
+      }
       #info {
-  padding: 20px;
-  color: red;
-  background-color: yellow;
-}
-
+        padding: 20px;
+        color: red;
+        background-color: yellow;
+        margin-top: 10px;
+      }
+      .letter {
+        display: inline-block;
+        margin: 5px;
+        font-size: 20px;
+        cursor: pointer;
+      }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
-         $(document).ready( function() {
-              // this is the secret word!
-              word =  "planner";
-              blank = "_ _ _ _ _ _ _";
-              $("#word").text(blank);
+      $(document).ready(function () {
+        let word = "planner";
+        let blank = "_ _ _ _ _ _ _";
+        let triedLetters = "";
+        let tries = 10;
+        let gameWon = false;
+        let gameLost = false;
 
-              // this is the list of letters that have been tried
-              triedLetters = "";
+        $("#word").text(blank);
+        $("#guesses").text("Guesses left: " + tries);
 
-              // this is the number of tries left
-              tries = 10;
-              $("#guesses").text("Guesses left: "+tries);
+        $(".letter").click(function () {
+          if (gameWon || gameLost) return;
 
-              // boolean (true / false variable) to track if game has been won or lost
-              gameWon = false;
-              gameLost = false;
-                   
-              // when a user clicks on a letter... this is where everything happens!
-              $(".letter").click(function () {
-  if (gameWon != true && gameLost != true) {
-    $("#info").text(""); // clear message
-    let letter = $(this).text(); // get clicked letter
-    $(this).css("text-decoration", "line-through"); 
-    $(this).css("color", "gray")// cross it out
+          let letter = $(this).text();
+          $(this).css("text-decoration", "line-through").css("color", "gray");
 
-    if (triedLetters.includes(letter)) {
-      $("#info").text("You've already tried that letter!");
-    } else if (!word.includes(letter)) {
-      tries -= 1;
-      $("#guesses").text("Guesses left: " + tries);
-      $("#info").text("Nope! Try again.");
+          if (triedLetters.includes(letter)) {
+            $("#info").text("You've already tried that letter!");
+            return;
+          }
 
-      if (tries <= 0) {
-        gameLost = true;
-        $("#info").text("You lost! The word was: " + word);
-        $("#resultImage").attr("src", "https://media.giphy.com/media/3og0IPxMM0erATueVW/giphy.gif").show();
-      }
-    } else {
-      // update the blanks
-      let updatedBlank = "";
-      for (let i = 0; i < word.length; i++) {
-        if (triedLetters.includes(word[i]) || word[i] === letter) {
-          updatedBlank += word[i] + " ";
-        } else {
-          updatedBlank += "_ ";
-        }
-      }
+          triedLetters += letter;
 
-      blank = updatedBlank.trim();
-      $("#word").text(blank);
+          if (!word.includes(letter)) {
+            tries -= 1;
+            $("#guesses").text("Guesses left: " + tries);
+            $("#info").text("Nope! Try again.");
+            if (tries <= 0) {
+              gameLost = true;
+              $("#info").text("You lost! The word was: " + word);
+              $("#resultImage")
+                .attr("src", "https://media.giphy.com/media/3og0IPxMM0erATueVW/giphy.gif")
+                .show();
+            }
+          } else {
+            let updatedBlank = "";
+            for (let i = 0; i < word.length; i++) {
+              updatedBlank += triedLetters.includes(word[i]) ? word[i] + " " : "_ ";
+            }
 
-      if (!blank.includes("_")) {
-        gameWon = true;
-        $("#info").text("🎉 You guessed it! The word was: " + word);
-        $("#resultImage").attr("src", "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif").show();
-      }
-    }
+            $("#word").text(updatedBlank.trim());
 
-    // track letter as tried
-    triedLetters += letter;
-  }
-           
-   } else {
-
-                      // replace the blanks in the blanks variable 
-                      // with the letter that was clicked on
-                      // replace the blanks with letter in blank
-                      // and replace the letters with blanks in word
-
-                     
-                      // check if the player has won the game
-
-
-                    }
-
-                    // add the letter to letters already tried
-
-                  }
-              });
-
-             // 
-           
-         });
-      
+            if (!updatedBlank.includes("_")) {
+              gameWon = true;
+              $("#info").text("🎉 You guessed it! The word was: " + word);
+              $("#resultImage")
+                .attr("src", "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif")
+                .show();
+            }
+          }
+        });
+      });
     </script>
   </head>
   <body>
-     <h1>Let's play Hangman!</h1>
-     <div id="guesses"></div>
-     <div id="info"></div>
-    <img id="resultImage" src="" style="display: none; max-width: 200px;">
-     <div id="word"></div>
-     <div id="alphabet"><p>Click to make a guess!</p>
-     <span class="letter" id="a">a</span>
-     <span class="letter" id="b">b</span>
-     <span class="letter" id="c">c</span>
-     <span class="letter" id="d">d</span>
-     <span class="letter" id="e">e</span>
-     <span class="letter" id="f">f</span>
-     <span class="letter" id="g">g</span>
-     <span class="letter" id="h">h</span>
-     <span class="letter" id="i">i</span>
-     <span class="letter" id="j">j</span>
-     <span class="letter" id="k">k</span>
-     <span class="letter" id="l">l</span>
-     <span class="letter" id="m">m</span>
-     <span class="letter" id="n">n</span>
-     <span class="letter" id="o">o</span>
-     <span class="letter" id="p">p</span>  
-     <span class="letter" id="q">q</span>
-     <span class="letter" id="r">r</span>
-     <span class="letter" id="s">s</span>
-     <span class="letter" id="t">t</span>
-     <span class="letter" id="u">u</span>
-     <span class="letter" id="v">v</span>
-     <span class="letter" id="w">w</span>  
-     <span class="letter" id="x">x</span>
-     <span class="letter" id="y">y</span>
-     <span class="letter" id="z">z</span>  
-     </div>
+    <h1>Let's play Hangman!</h1>
+    <div id="guesses"></div>
+    <div id="info"></div>
+    <img id="resultImage" src="" style="display: none; max-width: 200px;"><br>
+    <div id="word"></div>
+    <div id="alphabet"><p>Click to make a guess!</p>
+      <span class="letter">a</span><span class="letter">b</span><span class="letter">c</span>
+      <span class="letter">d</span><span class="letter">e</span><span class="letter">f</span>
+      <span class="letter">g</span><span class="letter">h</span><span class="letter">i</span>
+      <span class="letter">j</span><span class="letter">k</span><span class="letter">l</span>
+      <span class="letter">m</span><span class="letter">n</span><span class="letter">o</span>
+      <span class="letter">p</span><span class="letter">q</span><span class="letter">r</span>
+      <span class="letter">s</span><span class="letter">t</span><span class="letter">u</span>
+      <span class="letter">v</span><span class="letter">w</span><span class="letter">x</span>
+      <span class="letter">y</span><span class="letter">z</span>
+    </div>
   </body>
 </html>
