@@ -44,7 +44,8 @@
   if (gameWon != true && gameLost != true) {
     $("#info").text(""); // clear message
     let letter = $(this).text(); // get clicked letter
-    $(this).css("text-decoration", "line-through"); // cross it out
+    $(this).css("text-decoration", "line-through"); 
+    $(this).css("color", "gray")// cross it out
 
     if (triedLetters.includes(letter)) {
       $("#info").text("You've already tried that letter!");
@@ -56,6 +57,7 @@
       if (tries <= 0) {
         gameLost = true;
         $("#info").text("You lost! The word was: " + word);
+        $("#resultImage").attr("src", "https://media.giphy.com/media/3og0IPxMM0erATueVW/giphy.gif").show();
       }
     } else {
       // update the blanks
@@ -74,6 +76,7 @@
       if (!blank.includes("_")) {
         gameWon = true;
         $("#info").text("🎉 You guessed it! The word was: " + word);
+        $("#resultImage").attr("src", "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif").show();
       }
     }
 
@@ -109,6 +112,7 @@
      <h1>Let's play Hangman!</h1>
      <div id="guesses"></div>
      <div id="info"></div>
+    <img id="resultImage" src="" style="display: none; max-width: 200px;">
      <div id="word"></div>
      <div id="alphabet"><p>Click to make a guess!</p>
      <span class="letter" id="a">a</span>
